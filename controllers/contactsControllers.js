@@ -23,7 +23,7 @@ const getAllContacts = async (req, res) => {
     res.status(200).json(result);
   };
   
-  const createContact = async (req, res) => {
+  const addContact = async (req, res) => {
     const { _id: owner } = req.user;
     const result = await contacts.create({ ...req.body, owner });
     res.status(201).json(result);
@@ -73,7 +73,7 @@ const getAllContacts = async (req, res) => {
     getAllContacts: ctrlWrapper(getAllContacts),
     getOneContact: ctrlWrapper(getOneContact),
     deleteContact: ctrlWrapper(deleteContact),
-    createContact: ctrlWrapper(createContact),
+    addContact: ctrlWrapper(addContact),
     updateContact: ctrlWrapper(updateContact),
     updateStatusContact: ctrlWrapper(updateStatusContact),
   };
