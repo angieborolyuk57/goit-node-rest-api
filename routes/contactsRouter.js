@@ -1,12 +1,14 @@
-import express from "express";
-import {
-  getAllContacts,
-  getOneContact,
-  deleteContact,
-  addContact,
-  updateContact,
-  updateStatusContact, 
-} from "../controllers/contactsControllers.js";
+const express = require("express");
+const {
+    getAllContacts,
+    getOneContact,
+    addContact,
+    deleteContact,
+    updateContact,
+    updateStatusContact
+  } = require('../controllers/contactsControllers');
+  
+
 
 const contactsRouter = express.Router();
 
@@ -14,12 +16,11 @@ contactsRouter.get("/", getAllContacts);
 
 contactsRouter.get("/:id", getOneContact);
 
-contactsRouter.delete("/:id", deleteContact);
-
-contactsRouter.post("/", addContact);
+contactsRouter.post("/", addContact)
 
 contactsRouter.put("/:id", updateContact);
 
-contactsRouter.patch("/:id", updateStatusContact);
+contactsRouter.delete("/:id", deleteContact);
 
-export default contactsRouter;
+module.exports = contactsRouter;
+  

@@ -1,7 +1,6 @@
-const crypto = require('crypto');
 const fs = require("fs/promises");
 const path = require("path");
-const { nanoid } = require("nanoid");
+const nanoid = require("nanoid");
 
 const contactsPath = path.join(__dirname, "/db/contacts.json");
 
@@ -10,13 +9,13 @@ const listContacts = async () => {
     return JSON.parse(data);
 }
 
- const getContactById = async (id) =>  {
+  const getContactById = async (id) =>  {
     const contacts = await listContacts();
     const result = contacts.find(item => item.id === id);
     return result || null;
 }
 
- const addContact = async (data) =>  {
+  const addContact = async (data) =>  {
     const contacts = await listContacts();
     const newContact = {
         id: nanoid(),
@@ -39,10 +38,10 @@ const removeContact = async (id) => {
     return result; 
 }
 
-
 module.exports = {
     listContacts, 
-    getContactById, 
+    getContactById,
     addContact,
-    removeContact,
+    removeContact
+
 }
