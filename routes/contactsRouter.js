@@ -5,7 +5,6 @@ const {
     addContact,
     deleteContact,
     updateContact,
-    updateStatusContact
   } = require('../controllers/contactsControllers');
   
 

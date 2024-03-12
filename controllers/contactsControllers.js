@@ -73,15 +73,25 @@ const getAllContacts = async (req, res, next) => {
   };
 
   
-  const deleteContact = async (req, res) => {
-    const { id } = req.params;
-    const result = await contacts.findByIdAndDelete(id);
-    if (!result) {
-      res.status(404).message("Not found")
+  const deleteContact = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const index = await contacts.findIndex(contact => contact.id === id)
+    if(index === -1 ) {
+        throw HttpError(404, "Not found")
     }
     res.json({
       message: 'contact deleted',
     });
+    const [result] = contacts.splice(index, 1);
+    await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+    return result; 
+    
+    } catch (error) {
+      next(error)
+    }
+    
+    
   };
   
  
