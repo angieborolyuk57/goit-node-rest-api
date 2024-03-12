@@ -33,7 +33,6 @@ const getAllContacts = async (req, res, next) => {
     }
   };
  
-
    const addContact = async (req, res, next) => {
     try {
       const { name, email, phone } = req.body;
@@ -72,7 +71,6 @@ const getAllContacts = async (req, res, next) => {
     }
   };
 
-  
   const deleteContact = async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -90,12 +88,7 @@ const getAllContacts = async (req, res, next) => {
     } catch (error) {
       next(error)
     }
-    
-    
   };
-  
- 
-  
   
   module.exports = {
     getAllContacts,

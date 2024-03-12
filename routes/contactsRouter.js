@@ -7,8 +7,6 @@ const {
     updateContact,
   } = require('../controllers/contactsControllers');
   
-
-
 const contactsRouter = express.Router();
 
 contactsRouter.get("/", getAllContacts);
