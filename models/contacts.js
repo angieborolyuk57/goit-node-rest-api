@@ -24,7 +24,7 @@ const contactsSchema = new Schema({
     }
 }, {versionKey: false, timestamps: true});
 
-bookSchema.post("save", handleMongooseError)
+contactsSchema.post("save", handleMongooseError)
 
 const addSchema = Joi.object({
     name: Joi.string().required(), 

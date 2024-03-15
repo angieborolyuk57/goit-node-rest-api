@@ -2,7 +2,6 @@ const Contact = require('../models/contacts')
 const { HttpError}  = require('../helpers')
 
 
-
 const getAllContacts = async (req, res, next) => {
     try {
       const result = await Contact.find()
@@ -56,7 +55,7 @@ const getAllContacts = async (req, res, next) => {
     if(!result) {
       throw HttpError(404, "Not found")
     }
-    res.json(result)
+    res.status(200).json(result)
     } catch (error) {
       next(error)
     }
