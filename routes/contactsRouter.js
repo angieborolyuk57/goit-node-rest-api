@@ -18,9 +18,9 @@ contactsRouter.get("/", getAllContacts);
 
 contactsRouter.get("/:id",isValidId,  getOneContact);
 
-contactsRouter.post("/", validateBody(schemas.addSchema), addContact)
+contactsRouter.post("/", validateBody(schemas.updateSchema), addContact)
 
-contactsRouter.put("/:id",isValidId, validateBody(schemas.addSchema), updateContact);
+contactsRouter.put("/:id",isValidId, validateBody(schemas.updateSchema), updateContact);
 
 contactsRouter.patch("/:id/favorite",isValidId, validateBody(schemas.updateFavoriteSchema), updateFavorite);
 
