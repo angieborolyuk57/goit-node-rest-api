@@ -1,11 +1,10 @@
-const contacts = require('../models/contacts');
+const Contact = require('../models/contacts')
 const { HttpError}  = require('../helpers')
-
 
 
 const getAllContacts = async (req, res, next) => {
     try {
-      const result = await contacts.listContacts()
+      const result = await Contact.find()
     res.status(200).json(result);
     } catch (error) {
       next(error)
@@ -15,7 +14,7 @@ const getAllContacts = async (req, res, next) => {
   const getOneContact = async (req, res, next) => {
     try {
       const { id } = req.params;
-      const result = await contacts.getContactById(id)
+      const result = await Contact.findById(id)
       if (!result) {
         throw HttpError(404, "Not found")
       }  
@@ -28,18 +27,18 @@ const getAllContacts = async (req, res, next) => {
  
    const addContact = async (req, res, next) => {
     try {
-      const result = await contacts.addContact(req.body)
+      const result = await Contact.create(req.body)
       res.status(201).json(result);
 
     } catch (error) {
-      next(error)
+      next(error) 
     }
   };
 
   const updateContact = async (req, res, next) => {
     try {
       const { id } = req.params;
-      const result = await contacts.updateById(id, req.body)
+      const result = await Contact.findByIdAndUpdate(id, req.body, {new: true}); 
     if(!result) {
       throw HttpError(404, "Not found")
     }
@@ -49,10 +48,23 @@ const getAllContacts = async (req, res, next) => {
     }
   };
 
+  const updateFavorite = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const result = await Contact.findByIdAndUpdate(id, req.body, {new: true}); 
+    if(!result) {
+      throw HttpError(404, "Not found")
+    }
+    res.status(200).json(result)
+    } catch (error) {
+      next(error)
+    }
+  };
+
   const deleteContact = async (req, res, next) => {
     try {
       const { id } = req.params;
-      const result = await contacts.removeContact(id);
+      const result = await Contact.findByIdAndDelete(id);
       if(!result) {
         throw HttpError(404, "Not found")
       }
@@ -69,5 +81,6 @@ const getAllContacts = async (req, res, next) => {
     addContact, 
     deleteContact, 
     updateContact,
+    updateFavorite
   };
   
