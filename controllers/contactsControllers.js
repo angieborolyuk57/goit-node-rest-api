@@ -1,11 +1,11 @@
-const contacts = require('../models/contacts');
+const Contact = require('../models/contacts')
 const { HttpError}  = require('../helpers')
 
 
 
 const getAllContacts = async (req, res, next) => {
     try {
-      const result = await contacts.listContacts()
+      const result = await Contact.find()
     res.status(200).json(result);
     } catch (error) {
       next(error)
@@ -28,7 +28,7 @@ const getAllContacts = async (req, res, next) => {
  
    const addContact = async (req, res, next) => {
     try {
-      const result = await contacts.addContact(req.body)
+      const result = await Contact.create(req.body)
       res.status(201).json(result);
 
     } catch (error) {
