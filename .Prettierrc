@@ -4,5 +4,9 @@
   "tabWidth": 2,
   "useTabs": false,
   "trailingComma": "all",
+<<<<<<< HEAD
   "printWidth": 80
+=======
+  "printWidth": 80,
+>>>>>>> 3ac0428 (added controllers, schema and model for auth, error handling)
 }
