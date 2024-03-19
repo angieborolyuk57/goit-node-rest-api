@@ -1,6 +1,8 @@
 const { User } = require("../models/users")
 const { HttpError, CntrlWrapper } = require("../helpers")
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 
 const register = async (req, res) => {
   const { email, password } = req.body
@@ -28,7 +30,23 @@ const login = async (req, res) => {
     throw new HttpError(401, "Email or password is wrong")
   }
 
-  const token = user.createToken()
+  const { SECRET_KEY } = process.env
+  const payload = {
+    id: User.id,
+  }
+
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" }) // 23 hour
+  console.log(token)
+
+  try {
+    const { id } = jwt.verify(token, SECRET_KEY)
+    console.log(id)
+    const invalidToken = "kdfhdjgjsdfgjurhf"
+    const result = jst.verify(invalidToken, SECRET_KEY) // error
+    console.log(result)
+  } catch (error) {
+    console.log(error.message)
+  }
 
   res.json({
     token,
