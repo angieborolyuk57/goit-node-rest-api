@@ -1,9 +1,8 @@
 {
   "name": "goit-node-rest-api",
   "scripts": {
-    "test": "nodemon ./index.js",
     "start": "node ./server.js",
-    "watch": "nodemon ./server.js"
+    "dev": "nodemon ./server.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
