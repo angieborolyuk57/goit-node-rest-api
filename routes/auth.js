@@ -10,14 +10,9 @@ const router = express.Router()
 //sign up
 router.post("/register", validateBody(schemas.registerSchema), ctrl.register)
 // sign in
-router.post(
-  "/login",
-  authenticate,
-  validateBody(schemas.loginSchema),
-  ctrl.login,
-)
+router.post("/login", validateBody(schemas.loginSchema), ctrl.login)
 
-router.get("current", authenticate, ctrl.getCurrent)
+router.get("/current", authenticate, ctrl.getCurrent)
 
 router.get("/logout", authenticate, ctrl.logout)
 

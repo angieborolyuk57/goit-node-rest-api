@@ -11,9 +11,9 @@ const register = async (req, res) => {
   if (user) {
     throw HttpError(409, "Email in use")
   }
-  const hashPassword = await bcrypt.hash(password, 10);
+  const hashPassword = await bcrypt.hash(password, 10)
   const newUser = await User.create({ ...req.body, password: hashPassword })
-  res.json({
+  res.status(201).json({
     email: newUser.email,
     name: newUser.name,
   })
@@ -35,7 +35,7 @@ const login = async (req, res) => {
   const { SECRET_KEY } = process.env
 
   const payload = { id: user._id }
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" }) // 23 hour
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
   await User.findByIdAndUpdate(user._id, { token })
 
   res.status(200).json({
@@ -50,8 +50,7 @@ const login = async (req, res) => {
 
 const getCurrent = async (req, res) => {
   const { email, subsription } = req.user
-
-  req.status(200).json({
+  res.status(200).json({
     email,
     subsription,
   })
