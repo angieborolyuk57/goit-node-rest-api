@@ -67,9 +67,13 @@ const updateFavorite = async (req, res, next) => {
     const { id, _id: owner } = req.params
     const updateData = { ...req.body, owner }
 
-    const result = await Contact.findByIdAndUpdate(id, updateData, {
-      new: true,
-    })
+    const result = await Contact.findByIdAndUpdate(
+      { _id: id, owner },
+      updateData,
+      {
+        new: true,
+      },
+    )
     if (!result) {
       throw HttpError(404, "Not found")
     }
