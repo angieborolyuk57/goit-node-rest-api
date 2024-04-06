@@ -1,4 +1,3 @@
-
 const express = require("express")
 
 const validateBody = require("../helpers/validateBody")
@@ -17,7 +16,4 @@ router.get("/current", authenticate, ctrl.getCurrent)
 
 router.post("/logout", authenticate, ctrl.logout)
 
-//sign up
-router.post("/register",  ctrl.register);
-
-module.exports = router;
+module.exports = router

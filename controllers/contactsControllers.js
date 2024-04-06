@@ -47,15 +47,19 @@ const addContact = async (req, res, next) => {
 const updateContact = async (req, res, next) => {
   try {
     const { id } = req.params
+    const { _id: owner } = req.user
 
-    const result = await Contact.findOneAndUpdate({ _id: id }, req.body, {
-      new: true,
-    })
+    const result = await Contact.findOneAndUpdate(
+      { _id: id, owner },
+      req.body,
+      {
+        new: true,
+      },
+    )
 
     if (!result) {
       throw HttpError(404, "Not found")
     }
-
     res.json(result)
   } catch (error) {
     next(error)
@@ -67,7 +71,7 @@ const updateFavorite = async (req, res, next) => {
     const { id, _id: owner } = req.params
     const updateData = { ...req.body, owner }
 
-    const result = await Contact.findByIdAndUpdate(
+    const result = await Contact.findOneAndUpdate(
       { _id: id, owner },
       updateData,
       {
