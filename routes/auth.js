@@ -12,7 +12,6 @@ router.post("/register", validateBody(schemas.registerSchema), ctrl.register)
 // sign in
 router.post(
   "/login",
-  authenticate,
   validateBody(schemas.loginSchema),
   ctrl.login,
 )
