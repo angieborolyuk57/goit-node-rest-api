@@ -68,11 +68,11 @@ const updateContact = async (req, res, next) => {
 
 const updateFavorite = async (req, res, next) => {
   try {
-    const { id, _id: owner } = req.params
+    const { id } = req.params
+    const {_id: owner } = req.user
     const updateData = { ...req.body, owner }
-    
 
-    const result = await Contact.findByIdAndUpdate(
+    const result = await Contact.findOneAndUpdate(
       { _id: id, owner },
       updateData,
       {
