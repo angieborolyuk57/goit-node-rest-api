@@ -39,10 +39,10 @@ const userSchema = new Schema(
   { versionKey: false, timestamps: true },
 )
 
-userSchema.post("save", handleMongooseError)
+userSchema.post("save", handleMongooseError);
 
 const registerSchema = Joi.object({
-  name: Joi.string().required(),
+  name: Joi.string(),
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().min(6).required(),
 })
@@ -55,9 +55,9 @@ const loginSchema = Joi.object({
 const schemas = {
   registerSchema,
   loginSchema,
-}
+};
 
-const User = model("user", userSchema)
+const User = model("user", userSchema);
 
 module.exports = {
   schemas,

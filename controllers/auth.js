@@ -11,11 +11,13 @@ const register = async (req, res) => {
   if (user) {
     throw HttpError(409, "Email in use")
   }
-  const hashPassword = await bcrypt.hash(password, 10);
+  const hashPassword = await bcrypt.hash(password, 10)
   const newUser = await User.create({ ...req.body, password: hashPassword })
-  res.json({
-    email: newUser.email,
-    name: newUser.name,
+  res.status(201).json({
+    user: {
+      email: newUser.email,
+      subsription: newUser.subscription,
+    },
   })
 }
 
@@ -35,33 +37,31 @@ const login = async (req, res) => {
   const { SECRET_KEY } = process.env
 
   const payload = { id: user._id }
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" }) // 23 hour
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" })
   await User.findByIdAndUpdate(user._id, { token })
 
   res.status(200).json({
     token,
     user: {
       email: user.email,
-      name: user.name,
-      subsription: user.subsription,
+      subsription: user.subscription,
     },
   })
 }
 
 const getCurrent = async (req, res) => {
-  const { email, subsription } = req.user
-
-  req.status(200).json({
+  const { email, subscription } = req.user
+  res.status(200).json({
     email,
-    subsription,
+    subscription,
   })
 }
 
 const logout = async (req, res) => {
   const { _id } = req.user
   await User.findByIdAndUpdate(_id, { token: " " })
-  res.json({
-    message: "Logout success",
+  res.status(204).json({
+    message: "No content",
   })
 }
 

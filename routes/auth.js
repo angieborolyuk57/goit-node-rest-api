@@ -10,15 +10,10 @@ const router = express.Router()
 //sign up
 router.post("/register", validateBody(schemas.registerSchema), ctrl.register)
 // sign in
-router.post(
-  "/login",
-  validateBody(schemas.loginSchema),
-  ctrl.login,
-)
+router.post("/login", validateBody(schemas.loginSchema), ctrl.login)
 
-router.get("current", authenticate, ctrl.getCurrent)
+router.get("/current", authenticate, ctrl.getCurrent)
 
-router.get("/logout", authenticate, ctrl.logout)
+router.post("/logout", authenticate, ctrl.logout)
 
 module.exports = router;
-

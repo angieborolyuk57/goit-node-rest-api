@@ -1,9 +1,9 @@
-const { Schema, model } = require("mongoose")
-const Joi = require("joi")
+const { Schema, model } = require("mongoose");
+const Joi = require("joi");
 
-const { handleMongooseError } = require("../helpers")
+const { handleMongooseError } = require("../helpers");
 
-const phoneRegexp = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;
+const phoneRegexp = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/
 
 const contactSchema = new Schema(
   {
@@ -51,7 +51,7 @@ const updateSchema = Joi.object({
 
 const updateFavoriteSchema = Joi.object({
   favorite: Joi.boolean().required(),
-});
+})
 
 const schemas = {
   addSchema,
