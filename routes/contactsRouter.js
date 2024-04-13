@@ -11,6 +11,7 @@ const {
 const validateBody = require("../helpers/validateBody")
 const { isValidId, authenticate } = require("../middlewares")
 const { schemas } = require("../models/contacts")
+const upload = require("../middlewares/upload")
 
 const contactsRouter = express.Router()
 
@@ -20,14 +21,16 @@ contactsRouter.get("/:id", authenticate, isValidId, getOneContact)
 
 contactsRouter.post(
   "/",
-  authenticate, validateBody(schemas.updateSchema),
+  upload.single("poster"),
+  authenticate,
+  validateBody(schemas.updateSchema),
   addContact,
 )
 
 contactsRouter.put(
   "/:id",
   isValidId,
-  authenticate, 
+  authenticate,
   validateBody(schemas.updateSchema),
   updateContact,
 )
@@ -35,7 +38,7 @@ contactsRouter.put(
 contactsRouter.patch(
   "/:id/favorite",
   isValidId,
-  authenticate, 
+  authenticate,
   validateBody(schemas.updateFavoriteSchema),
   updateFavorite,
 )

@@ -3,9 +3,11 @@ const { HttpError, CntrlWrapper } = require("../helpers")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
+const gravatar = require("gravatar")
 
 const register = async (req, res) => {
   const { email, password } = req.body
+  const avatarURL = gravatar.url(email, { s: "200", r: "pg", d: "404" })
   const user = await User.findOne({ email })
 
   if (user) {
@@ -17,6 +19,7 @@ const register = async (req, res) => {
     user: {
       email: newUser.email,
       subsription: newUser.subscription,
+      avatarUrl: avatarURL,
     },
   })
 }
@@ -65,9 +68,24 @@ const logout = async (req, res) => {
   })
 }
 
+const updateAvatar = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Not authorized" })
+  }
+  const { _id } = req.user
+  const user = await User.findById(_id)
+  const existingAvatarUrl = user.avatarUrl
+
+  const newAvatarUrl = req.file ? req.file.path : existingAvatarUrl
+
+  await User.findByIdAndUpdate(_id, { avatarUrl: newAvatarUrl })
+  res.status(200).json({ avatarUrl: newAvatarUrl })
+}
+
 module.exports = {
   register: CntrlWrapper(register),
   login: CntrlWrapper(login),
   getCurrent: CntrlWrapper(getCurrent),
   logout: CntrlWrapper(logout),
+  updateAvatar: CntrlWrapper(updateAvatar),
 }
