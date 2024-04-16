@@ -1,7 +1,7 @@
 const multer = require("multer")
 const path = require("path")
 
-const destination = path.resolve("tmp")
+const destination = path.join(__dirname, "../", "tmp")
 
 const storage = multer.diskStorage({
   destination,
@@ -30,4 +30,4 @@ const upload = multer({
   fileFilter,
 })
 
-module.exports = upload;
+module.exports = upload

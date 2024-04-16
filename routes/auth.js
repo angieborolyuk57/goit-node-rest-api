@@ -5,7 +5,6 @@ const { authenticate } = require("../middlewares")
 const { schemas } = require("../models/users")
 const ctrl = require("../controllers/auth")
 const upload = require("../middlewares/upload")
-const { processAvatar } = require("../middlewares/processAvatar")
 
 const router = express.Router()
 
@@ -21,7 +20,6 @@ router.post("/logout", authenticate, ctrl.logout)
 router.patch(
   "/avatars",
   upload.single("avatar"),
-  processAvatar,
   authenticate,
   ctrl.updateAvatar,
 )
