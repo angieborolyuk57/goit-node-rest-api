@@ -19,7 +19,11 @@ const register = async (req, res) => {
     throw HttpError(409, "Email in use")
   }
   const hashPassword = await bcrypt.hash(password, 10)
-  const newUser = await User.create({ ...req.body, password: hashPassword })
+  const newUser = await User.create({
+    ...req.body,
+    password: hashPassword,
+    avatarURL,
+  })
   res.status(201).json({
     user: {
       email: newUser.email,
@@ -74,8 +78,13 @@ const logout = async (req, res) => {
 }
 
 const updateAvatar = async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded" })
+  }
+
   const { _id } = req.user
   const { path: tempUpload, originalname } = req.file
+
   const img = await Jimp.read(tempUpload)
   await img
     .autocrop()
@@ -85,6 +94,7 @@ const updateAvatar = async (req, res) => {
   const resultUpload = path.join(avatarDir, filename)
   await fs.rename(tempUpload, resultUpload)
   const avatarURL = path.join("avatars", filename)
+
   await User.findByIdAndUpdate(_id, { avatarURL })
   res.status(200).json({ avatarURL })
 }
