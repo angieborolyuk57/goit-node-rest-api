@@ -3,20 +3,32 @@ const { HttpError, CntrlWrapper } = require("../helpers")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
+const gravatar = require("gravatar")
+const fs = require("fs/promises")
+const Jimp = require("jimp")
+const path = require("path")
+
+const avatarDir = path.join(__dirname, "../", "public", "avatars")
 
 const register = async (req, res) => {
   const { email, password } = req.body
+  const avatarURL = gravatar.url(email, { s: "200", r: "pg", d: "404" })
   const user = await User.findOne({ email })
 
   if (user) {
     throw HttpError(409, "Email in use")
   }
   const hashPassword = await bcrypt.hash(password, 10)
-  const newUser = await User.create({ ...req.body, password: hashPassword })
+  const newUser = await User.create({
+    ...req.body,
+    password: hashPassword,
+    avatarURL,
+  })
   res.status(201).json({
     user: {
       email: newUser.email,
       subsription: newUser.subscription,
+      avatarUrl: avatarURL,
     },
   })
 }
@@ -65,9 +77,32 @@ const logout = async (req, res) => {
   })
 }
 
+const updateAvatar = async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded" })
+  }
+
+  const { _id } = req.user
+  const { path: tempUpload, originalname } = req.file
+
+  const img = await Jimp.read(tempUpload)
+  await img
+    .autocrop()
+    .cover(250, 250, Jimp.HORIZONTAL_ALIGN_CENTER | Jimp.VERTICAL_ALIGN_MIDDLE)
+    .writeAsync(tempUpload)
+  const filename = `${Date.now()}-${originalname}`
+  const resultUpload = path.join(avatarDir, filename)
+  await fs.rename(tempUpload, resultUpload)
+  const avatarURL = path.join("avatars", filename)
+
+  await User.findByIdAndUpdate(_id, { avatarURL })
+  res.status(200).json({ avatarURL })
+}
+
 module.exports = {
   register: CntrlWrapper(register),
   login: CntrlWrapper(login),
   getCurrent: CntrlWrapper(getCurrent),
   logout: CntrlWrapper(logout),
+  updateAvatar: CntrlWrapper(updateAvatar),
 }
