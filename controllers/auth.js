@@ -7,6 +7,9 @@ const gravatar = require("gravatar")
 const fs = require("fs/promises")
 const Jimp = require("jimp")
 const path = require("path")
+const { nanoid } = require("nanoid")
+const sendEmail = require("../helpers/sendEmail")
+const { BASE_URL } = process.env
 
 const avatarDir = path.join(__dirname, "../", "public", "avatars")
 
@@ -19,11 +22,22 @@ const register = async (req, res) => {
     throw HttpError(409, "Email in use")
   }
   const hashPassword = await bcrypt.hash(password, 10)
+  const verificationCode = nanoid()
+
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
     avatarURL,
+    verificationCode,
   })
+  const verifyEmail = {
+    to: email,
+    subject: "Verify your email",
+    html: `<a target="_blank" href="${BASE_URL}api/auth/verify/${verificationCode}">Click here to verify your email</a>`,
+  }
+
+  await sendEmail(verifyEmail)
+
   res.status(201).json({
     user: {
       email: newUser.email,
