@@ -14,9 +14,10 @@ router.post("/register", validateBody(schemas.registerSchema), ctrl.register)
 router.post("/login", validateBody(schemas.loginSchema), ctrl.login)
 
 router.get("/current", authenticate, ctrl.getCurrent)
+router.get("/verify/:verificationCode", ctrl.verify)
+router.post("/verify", validateBody(schemas.userEmails), ctrl.resendVerify)
 
 router.post("/logout", authenticate, ctrl.logout)
-// updating the avatar
 router.patch(
   "/avatars",
   upload.single("avatar"),

@@ -41,7 +41,7 @@ const register = async (req, res) => {
   res.status(201).json({
     user: {
       email: newUser.email,
-      subsription: newUser.subscription,
+      subscription: newUser.subscription,
       avatarUrl: avatarURL,
     },
   })
@@ -53,6 +53,10 @@ const login = async (req, res) => {
 
   if (!user) {
     throw HttpError(401, "Email or password is wrong")
+  }
+
+  if (!user.verify) {
+    throw HttpError(403, "Email is not verified")
   }
   const passwordCompare = await bcrypt.compare(password, user.password)
 
@@ -113,10 +117,52 @@ const updateAvatar = async (req, res) => {
   res.status(200).json({ avatarURL })
 }
 
+const verify = async (req, res) => {
+  const { verificationCode } = req.params
+
+  const user = await User.findOne({ verificationCode })
+  if (!user) {
+    throw HttpError(404, "User not found")
+  }
+  await User.findByIdAndUpdate(
+    { _id: user._id },
+    { verify: true, verificationCode: "" },
+  )
+  res.status(200).json({
+    message: "Verification successful",
+  })
+}
+
+const resendVerify = async (req, res) => {
+  const { email } = req.body
+  const user = await User.findOne({ email })
+  if (!user) {
+    throw HttpError(404, "User not found")
+  }
+  if (user.verify) {
+    throw HttpError(400, "Verification has already been passed")
+  }
+
+  const verificationCode = nanoid()
+
+  const verifyEmail = {
+    to: email,
+    subject: "Verify email",
+    html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${verificationCode}">Click to verify email</a>`,
+  }
+  await sendEmail(verifyEmail)
+
+  res.status(200).json({
+    message: "Verify email sent again",
+  })
+}
+
 module.exports = {
   register: CntrlWrapper(register),
   login: CntrlWrapper(login),
   getCurrent: CntrlWrapper(getCurrent),
   logout: CntrlWrapper(logout),
   updateAvatar: CntrlWrapper(updateAvatar),
+  verify: CntrlWrapper(verify),
+  resendVerify: CntrlWrapper(resendVerify),
 }
